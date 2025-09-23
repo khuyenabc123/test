@@ -1,13 +1,12 @@
 package pages;
 
-import framework.constants.FrameWorkConstants;
-import framework.core.BasePage;
-import org.apache.logging.log4j.*;
+import base.BasePage;
+import utils.LogUtils;
+import utils.readers.ConfigReader;
 import org.openqa.selenium.By;
+import static java.lang.Integer.parseInt;
 
 public class HomePage extends BasePage {
-    private static final Logger logger = LogManager.getLogger(HomePage.class);
-
     private final By imgLogo = By.xpath("//img[@class='logo']");
     private final By inputUsername = By.xpath("//input[@name='username']");
     private final By inputPassword = By.xpath("//input[@name='password']");
@@ -15,28 +14,30 @@ public class HomePage extends BasePage {
     private final By txtWelcome = By.xpath("//p[@class='smallText']");
     private final By lnkRegister = By.xpath("//a[text()='Register']");
 
+    Integer time = parseInt(ConfigReader.getProperty("defaultTimeout"));
+
     private By lnkAccountServices(String lnkName) {
         return By.xpath(String.format("//a[@href and text()='%s']", lnkName));
     }
 
     public void clickImgLogo() {
-        click(imgLogo, FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Click page logo");
+        click(imgLogo, time);
+        LogUtils.info("Click page logo");
     }
 
     public void enterUsername(String username) {
-        type(inputUsername, username, FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Enter Username: " + username);
+        type(inputUsername, username, time);
+        LogUtils.info("Enter Username: " + username);
     }
 
     public void enterPassword(String password) {
-        type(inputPassword, password, FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Enter Password: " + password);
+        type(inputPassword, password, time);
+        LogUtils.info("Enter Password: " + password);
     }
 
     public void clickBtnLogin() {
-        click(btnLogin, FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Click Login button");
+        click(btnLogin, time);
+        LogUtils.info("Click Login button");
     }
 
     public void login(String username, String password) {
@@ -45,21 +46,21 @@ public class HomePage extends BasePage {
             enterPassword(password);
             clickBtnLogin();
         } catch (Exception e) {
-            logger.info("Login Failed", e.getMessage(), e);
+            LogUtils.info("Login Failed");
         }
     }
 
     public String getTxtWelcome() {
-        return getText(txtWelcome, FrameWorkConstants.DEFAULT_TIMEOUT);
+        return getText(txtWelcome, time);
     }
 
     public void clickLnkRegister() {
-        click(lnkRegister, FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Click Register link");
+        click(lnkRegister, time);
+        LogUtils.info("Click Register link");
     }
 
     public void clickLnkLogOut() {
-        click(lnkAccountServices("Log Out"), FrameWorkConstants.DEFAULT_TIMEOUT);
-        logger.info("Click Log Out link");
+        click(lnkAccountServices("Log Out"), time);
+        LogUtils.info("Click Log Out link");
     }
 }
