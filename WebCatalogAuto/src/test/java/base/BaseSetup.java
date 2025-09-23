@@ -11,13 +11,13 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 
 public class BaseSetup {
-    private WebDriver driver;
+    private static WebDriver driver;
 
     static String driverPath = ConfigReader.getProperty("driverPath");
     static String browser = ConfigReader.getProperty("browser");
     static String appURL = ConfigReader.getProperty("url");
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
         return driver;
     }
 

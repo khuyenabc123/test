@@ -101,7 +101,7 @@ public class BasePage {
 
     public WebElement waitForVisibility(By locator, int timeoutSeconds) {
         try {
-            WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(timeoutSeconds));
+            WebDriverWait wait = new WebDriverWait(BaseSetup.getDriver(), Duration.ofSeconds(timeoutSeconds));
             return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (Exception e) {
             logger.error("Element not visible at locator: {} within {} seconds", locator, timeoutSeconds, e);
@@ -111,7 +111,7 @@ public class BasePage {
 
     public void scrollToElement(WebElement element) {
         try {
-            new Actions(DriverFactory.getDriver()).scrollToElement(element).perform();
+            new Actions(BaseSetup.getDriver()).scrollToElement(element).perform();
         } catch (Exception e) {
             logger.error("Failed to scroll to element: {}", element, e);
         }
