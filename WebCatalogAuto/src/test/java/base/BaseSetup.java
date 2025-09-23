@@ -39,7 +39,7 @@ public class BaseSetup {
     private static WebDriver initChromeDriver(String appURL) {
         System.out.println("Launching Chrome browser...");
 
-        System.setProperty("webdriver.chrome.driver", driverPath + "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", driverPath + "chromedriver");
 
         WebDriver driver = new ChromeDriver();
         driver.manage().window().maximize();
