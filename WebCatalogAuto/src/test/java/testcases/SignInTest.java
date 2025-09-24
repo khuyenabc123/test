@@ -1,6 +1,6 @@
 package testcases;
 
-import base.BaseSetup;
+import base.BaseTest;
 import listeners.TestListener;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -10,7 +10,7 @@ import utils.TestDataFile;
 import utils.TestDataProvider;
 
 @Listeners(TestListener.class)
-public class SignInTest extends BaseSetup {
+public class SignInTest extends BaseTest {
 
     public SignInPage signinPage;
 
@@ -19,9 +19,8 @@ public class SignInTest extends BaseSetup {
     public void signIn(String email) throws Exception {
         LogUtils.info("Running login test ...");
 
-        System.out.println(getDriver());
-
-        signinPage = new SignInPage(getDriver());
+        driver = getDriverInstance();
+        signinPage = new SignInPage(driver);
 
         signinPage.signIn(email);
     }

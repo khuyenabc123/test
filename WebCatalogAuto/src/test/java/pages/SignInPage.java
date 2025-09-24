@@ -24,9 +24,9 @@ public class SignInPage extends BasePage {
     By signInLink = By.xpath("//a[text()=\"Sign in\"]");
     By signInWithEmailOption = By.xpath("//a[text()=\"Continue with Email\"]");
     By emailInput = By.id("email");
-    By continueButton = By.xpath("button[@type=\"submit\"]");
-    By otpInput = By.xpath("input[@id=\"code\"]");
-    By signInButton = By.xpath("button[@type=\"submit\"]");
+    By continueButton = By.xpath("//button[@type=\"submit\"]");
+    By otpInput = By.xpath("//input[@id=\"code\"]");
+    By signInButton = By.xpath("//button[@type=\"submit\"]");
 
     public SignInPage(WebDriver driver) {
         this.driver = driver;
