@@ -20,9 +20,12 @@ public class CaptureHelpers {
         File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
         String timestamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-        String destinationPath = ConfigReader.getProperty("screenshotPath") + "screenshot_" + timestamp + ".png";
+        String fileName = "screenshot_" + timestamp + ".png";
 
-        File destinationFile = new File(destinationPath);
+        String savePath = System.getProperty("user.dir") + File.separator
+                + ConfigReader.getProperty("screenshotPath") + File.separator + fileName;
+
+        File destinationFile = new File(savePath);
 
         try {
             Files.createDirectories(destinationFile.getParentFile().toPath());
@@ -31,16 +34,18 @@ public class CaptureHelpers {
             e.printStackTrace();
         }
 
-        return destinationPath;
+        return "../screenshots/" + fileName;
     }
 
     public static void logWithScreenShot(WebDriver driver, Status status, String message) {
         String screenshotPath = captureScreenShot(driver);
 
         try {
-            ExtentManager.getTest().log(status, message, MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+            ExtentManager.getTest().log(status, message,
+                    MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
         } catch (Exception e) {
-            ExtentManager.getTest().log(Status.WARNING, "Could not attach screenshot: " + e.getMessage());
+            ExtentManager.getTest().log(Status.WARNING,
+                    "Could not attach screenshot: " + e.getMessage());
         }
     }
 }

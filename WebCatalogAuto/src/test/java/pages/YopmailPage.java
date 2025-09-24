@@ -4,6 +4,8 @@ import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import java.time.Duration;
+
 public class YopmailPage extends BasePage {
     private final By iframeInbox = By.id("ifinbox");
     private final By iframeMail = By.id("ifmail");
@@ -29,5 +31,31 @@ public class YopmailPage extends BasePage {
         driver.switchTo().defaultContent();
 
         return body.replaceAll(".*?(\\d{6}).*", "$1");
+    }
+
+    public void openYopmailTab(String appWindow) {
+        ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript("window.open('about:blank','_blank');");
+
+        // Switch to the new tab
+        java.util.Set<String> allWindows = driver.getWindowHandles();
+        for (String window : allWindows) {
+            if (!window.equals(appWindow)) {
+                driver.switchTo().window(window);
+                break;
+            }
+        }
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    public String getOTPFromMail(String email, String appWindow) {
+        openInbox(email);
+        String otp = getLatestOtp();
+
+        driver.close();
+        driver.switchTo().window(appWindow);
+
+        return otp;
     }
 }

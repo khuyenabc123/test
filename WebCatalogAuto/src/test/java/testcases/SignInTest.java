@@ -49,29 +49,14 @@ public class SignInTest extends BaseTest {
         String appWindow = driver.getWindowHandle();
 
         // Step 3: Open Yopmail in a new tab
-        ((org.openqa.selenium.JavascriptExecutor) driver)
-                .executeScript("window.open('about:blank','_blank');");
-
-        // Switch to the new tab
-        java.util.Set<String> allWindows = driver.getWindowHandles();
-        for (String window : allWindows) {
-            if (!window.equals(appWindow)) {
-                driver.switchTo().window(window);
-                break;
-            }
-        }
+        yopmail.openYopmailTab(appWindow);
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         // Step 4: Get OTP from Yopmail
-        yopmail.openInbox(email);
-        String otp = yopmail.getLatestOtp();
+        String otp = yopmail.getOTPFromMail(email, appWindow);
 
-        // Step 5: Close Yopmail tab and switch back to app
-        driver.close();
-        driver.switchTo().window(appWindow);
-
-        // Step 6: Enter OTP and verify login
+        // Step 5: Enter OTP and verify login
         otpPage.enterOtp(otp);
         otpPage.clickSignInButton();
 
