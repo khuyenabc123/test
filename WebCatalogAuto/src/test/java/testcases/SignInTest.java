@@ -11,6 +11,8 @@ import pages.*;
 import utils.TestDataFile;
 import utils.TestDataProvider;
 
+import java.time.Duration;
+
 @Listeners(TestListener.class)
 public class SignInTest extends BaseTest {
     private HomePage home;
@@ -35,21 +37,45 @@ public class SignInTest extends BaseTest {
     @Test(dataProvider = "testData", dataProviderClass = TestDataProvider.class)
     @TestDataFile(file = "${loginDataFile}", sheet = "SignIn")
     public void testSignInWithValidEmail(String email) {
-        home.clickSignInButton();
+        // Step 1: Go to sign-in
+        home.clickBtnLSignIn();
         signUp.clickSignInLink();
         options.clickContinueWithEmail();
 
         signIn.enterEmail(email);
         signIn.clickContinueButton();
 
+        // Step 2: Save the app window handle
+        String appWindow = driver.getWindowHandle();
+
+        // Step 3: Open Yopmail in a new tab
+        ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript("window.open('about:blank','_blank');");
+
+        // Switch to the new tab
+        java.util.Set<String> allWindows = driver.getWindowHandles();
+        for (String window : allWindows) {
+            if (!window.equals(appWindow)) {
+                driver.switchTo().window(window);
+                break;
+            }
+        }
+
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        // Step 4: Get OTP from Yopmail
         yopmail.openInbox(email);
         String otp = yopmail.getLatestOtp();
 
-        driver.navigate().back();
+        // Step 5: Close Yopmail tab and switch back to app
+        driver.close();
+        driver.switchTo().window(appWindow);
+
+        // Step 6: Enter OTP and verify login
         otpPage.enterOtp(otp);
         otpPage.clickSignInButton();
 
-        Assert.assertTrue(driver.getCurrentUrl().contains("dashboard"),
+        Assert.assertTrue(home.isAvatarMenuDisplayed(),
                 "User should land on dashboard after login");
     }
 }
