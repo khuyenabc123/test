@@ -4,7 +4,7 @@
         <classes>
             <class name="testcases.SignInTest">
                 <methods>
-                    <include name="signIn" />
+                    <include name="testSignInWithValidEmail" />
                 </methods>
             </class>
         </classes>

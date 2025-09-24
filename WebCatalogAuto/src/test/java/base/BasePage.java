@@ -1,6 +1,7 @@
 package base;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
@@ -11,6 +12,12 @@ import java.time.Duration;
 
 public class BasePage {
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
+
+    protected WebDriver driver;
+
+    public BasePage(WebDriver driver) {
+        this.driver = driver;
+    }
 
     public void click(By locator, int timeoutSeconds) {
         try {
