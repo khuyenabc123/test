@@ -2,7 +2,6 @@ package pages;
 
 import base.BasePage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 import utils.LogUtils;
 
@@ -14,10 +13,6 @@ public class SignUpPage extends BasePage {
     private final By btnSignIn = By.xpath("//button[@data-slot=\"button\"]");
     private final By signInLink = By.xpath("//a[contains(@href, \"login\") and not(contains(@href, \"login-with\"))]");
     private final By signUnWithEmailOption = By.xpath("//a[contains(@href, \"email\")]");
-
-    public SignUpPage(WebDriver driver) {
-        super(driver);
-    }
 
     public void enterEmail(String email) {
         LogUtils.info("Enter Email address: " + email);

@@ -14,10 +14,6 @@ public class HomePage extends BasePage {
     private final By btnAccountSettings = By.xpath("//a[@data-slot=\"dropdown-menu-item\"]");
     private final By btnLogout = By.xpath("//button[@data-slot=\"dropdown-menu-item\"]");
 
-    public HomePage(WebDriver driver) {
-        super(driver);
-    }
-
     public void clickImgLogo() {
         click(imgLogo, 10);
         LogUtils.info("Click home page logo");

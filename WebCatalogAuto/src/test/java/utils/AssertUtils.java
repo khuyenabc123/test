@@ -1,12 +1,9 @@
 package utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 public class AssertUtils {
-    private static final Logger logger = LogManager.getLogger(AssertUtils.class);
     private static final SoftAssert softAssert = new SoftAssert();
 
     // ---------- HARD ASSERTIONS ----------
@@ -14,9 +11,9 @@ public class AssertUtils {
         logAssertion("Hard", "Equals", actual, expected, message);
         try {
             Assert.assertEquals(actual, expected, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
@@ -25,9 +22,9 @@ public class AssertUtils {
         logAssertion("Hard", "NotEquals", actual, expected, message);
         try {
             Assert.assertNotEquals(actual, expected, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
@@ -36,9 +33,9 @@ public class AssertUtils {
         logAssertion("Hard", "True", String.valueOf(condition), "true", message);
         try {
             Assert.assertTrue(condition, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
@@ -47,9 +44,9 @@ public class AssertUtils {
         logAssertion("Hard", "False", String.valueOf(condition), "false", message);
         try {
             Assert.assertFalse(condition, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
@@ -58,9 +55,9 @@ public class AssertUtils {
         logAssertion("Hard", "Null", actual, "null", message);
         try {
             Assert.assertNull(actual, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
@@ -69,15 +66,15 @@ public class AssertUtils {
         logAssertion("Hard", "NotNull", actual, "not null", message);
         try {
             Assert.assertNotNull(actual, message);
-            logger.info("✅ Passed");
+            LogUtils.info("✅ Passed");
         } catch (AssertionError e) {
-            logger.error("❌ Failed: " + e.getMessage());
+            LogUtils.error("❌ Failed: " + e.getMessage());
             throw e;
         }
     }
 
     public static void fail(String message) {
-        logger.error("❌ Forced Failure: " + message);
+        LogUtils.error("❌ Forced Failure: " + message);
         Assert.fail(message);
     }
 
@@ -113,19 +110,19 @@ public class AssertUtils {
     }
 
     public static void softFail(String message) {
-        logger.error("❌ Soft Forced Failure: " + message);
+        LogUtils.error("❌ Soft Forced Failure: " + message);
         softAssert.fail(message);
     }
 
     public static void assertAll() {
-        logger.info("🔍 Verifying all soft assertions...");
+        LogUtils.info("🔍 Verifying all soft assertions...");
         softAssert.assertAll();
     }
 
     // ---------- INTERNAL LOGGING ----------
     private static void logAssertion(String type, String method, String actual, String expected, String message) {
-        logger.info(type + " Assert " + method + ": " + message);
-        logger.info("Expected: " + expected);
-        logger.info("Actual: " + actual);
+        LogUtils.info(type + " Assert " + method + ": " + message);
+        LogUtils.info("Expected: " + expected);
+        LogUtils.info("Actual: " + actual);
     }
 }

@@ -1,10 +1,14 @@
 package pages;
 
 import base.BasePage;
+import base.DriverFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import utils.LogUtils;
+import utils.readers.ConfigReader;
 
-import java.time.Duration;
+import java.util.Set;
 
 public class YopmailPage extends BasePage {
     private final By iframeInbox = By.id("ifinbox");
@@ -12,15 +16,19 @@ public class YopmailPage extends BasePage {
     private final By latestMail = By.cssSelector("div.m");
     private final By mailBody = By.id("mail");
 
-    public YopmailPage(WebDriver driver) {
-        super(driver);
+    private final String yopMailUrl = ConfigReader.getProperty("yopMailLoginUrl");
+
+    public YopmailPage() {
+        super();
     }
 
     public void openInbox(String email) {
-        driver.get("https://yopmail.com/en/?login=" + email);
+        DriverFactory.getDriver().get(yopMailUrl + email);
     }
 
     public String getLatestOtp() {
+        WebDriver driver = DriverFactory.getDriver();
+
         driver.switchTo().frame(driver.findElement(iframeInbox));
         driver.findElement(latestMail).click();
 
@@ -30,32 +38,63 @@ public class YopmailPage extends BasePage {
         String body = driver.findElement(mailBody).getText();
         driver.switchTo().defaultContent();
 
+        LogUtils.info("Get latest OTP code in mail");
+
         return body.replaceAll(".*?(\\d{6}).*", "$1");
     }
 
-    public void openYopmailTab(String appWindow) {
-        ((org.openqa.selenium.JavascriptExecutor) driver)
-                .executeScript("window.open('about:blank','_blank');");
+    public String getOTPFromMail(String email, String appWindow) {
 
-        // Switch to the new tab
-        java.util.Set<String> allWindows = driver.getWindowHandles();
-        for (String window : allWindows) {
-            if (!window.equals(appWindow)) {
-                driver.switchTo().window(window);
-                break;
+        openInbox(email);
+
+        String otp = null;
+        long endTime = System.currentTimeMillis() + 10000;
+
+        while (System.currentTimeMillis() < endTime) {
+            try {
+                otp = getLatestOtp();
+                if (otp != null && otp.matches("\\d{6}")) {
+                    break;
+                }
+            } catch (Exception e) {
+                // Ignore until OTP appears
             }
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            openInbox(email);
         }
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+
+        if (otp == null) {
+            throw new RuntimeException("Timeout waiting for OTP for: " + email);
+        }
+
+        LogUtils.info("Get OTP code: " + otp);
+        return otp;
     }
 
-    public String getOTPFromMail(String email, String appWindow) {
-        openInbox(email);
-        String otp = getLatestOtp();
+    public String openYopmailTab(String appWindow) {
+        ((JavascriptExecutor) driver).executeScript("window.open('https://yopmail.com', '_blank');");
+        Set<String> allWindows = driver.getWindowHandles();
+        for (String handle : allWindows) {
+            if (!handle.equals(appWindow)) {
+                driver.switchTo().window(handle);
+                return handle;
+            }
+        }
+        return null;
+    }
 
-        driver.close();
+    public void closeYopmailTab(String yopmailHandle, String appWindow) {
+        if (yopmailHandle != null) {
+            driver.switchTo().window(yopmailHandle).close();
+        }
         driver.switchTo().window(appWindow);
-
-        return otp;
     }
 }

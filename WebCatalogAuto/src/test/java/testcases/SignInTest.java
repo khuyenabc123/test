@@ -1,8 +1,7 @@
 package testcases;
 
-import base.BaseTest;
+import base.BaseSetup;
 import listeners.TestListener;
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -11,27 +10,19 @@ import pages.*;
 import utils.TestDataFile;
 import utils.TestDataProvider;
 
-import java.time.Duration;
-
 @Listeners(TestListener.class)
-public class SignInTest extends BaseTest {
+public class SignInTest extends BaseSetup {
     private HomePage home;
     private SignUpPage signUp;
-    private SignInOptionsPage options;
     private SignInPage signIn;
-    private OTPPage otpPage;
     private YopmailPage yopmail;
 
     @BeforeMethod
     public void setUpPages() {
-        WebDriver driver = getDriverInstance();
-
-        home = new HomePage(driver);
-        signUp = new SignUpPage(driver);
-        options = new SignInOptionsPage(driver);
-        signIn = new SignInPage(driver);
-        otpPage = new OTPPage(driver);
-        yopmail = new YopmailPage(driver);
+        home = new HomePage();
+        signUp = new SignUpPage();
+        signIn = new SignInPage();
+        yopmail = new YopmailPage();
     }
 
     @Test(dataProvider = "testData", dataProviderClass = TestDataProvider.class)
@@ -40,27 +31,43 @@ public class SignInTest extends BaseTest {
         // Step 1: Go to sign-in
         home.clickBtnLSignIn();
         signUp.clickSignInLink();
-        options.clickContinueWithEmail();
+        signIn.clickContinueWithEmail();
 
         signIn.enterEmail(email);
         signIn.clickContinueButton();
 
         // Step 2: Save the app window handle
-        String appWindow = driver.getWindowHandle();
+        String appWindow = base.DriverFactory.getDriver().getWindowHandle();
 
-        // Step 3: Open Yopmail in a new tab
-        yopmail.openYopmailTab(appWindow);
-
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        // Step 3: Open Yopmail in a new tab and get its handle
+        String yopmailWindow = yopmail.openYopmailTab(appWindow);
 
         // Step 4: Get OTP from Yopmail
-        String otp = yopmail.getOTPFromMail(email, appWindow);
+        String otp = yopmail.getOTPFromMail(email, yopmailWindow);
 
-        // Step 5: Enter OTP and verify login
-        otpPage.enterOtp(otp);
-        otpPage.clickSignInButton();
+        // Step 5: Close Yopmail tab and switch back to app window
+        yopmail.closeYopmailTab(yopmailWindow, appWindow);
+
+        // Step 6: Enter OTP in the app
+        signIn.enterOtp(otp);
+        signIn.clickSignInButton();
 
         Assert.assertTrue(home.isAvatarMenuDisplayed(),
                 "User should land on dashboard after login");
+    }
+
+    @Test
+    public void submitEmptyEmail() {
+        home.clickBtnLSignIn();
+        signUp.clickSignInLink();
+        signIn.clickContinueWithEmail();
+
+        signIn.enterEmail("");
+        signIn.clickContinueButton();
+
+        boolean test = signIn.isOTPInputDisplayed();
+
+        Assert.assertFalse(test,
+                "OTP input should not be displayed");
     }
 }
