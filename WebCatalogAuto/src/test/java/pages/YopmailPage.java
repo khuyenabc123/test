@@ -9,6 +9,7 @@ import utils.LogUtils;
 import utils.readers.ConfigReader;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class YopmailPage extends BasePage {
     private final By iframeInbox = By.id("ifinbox");
@@ -94,5 +95,11 @@ public class YopmailPage extends BasePage {
             driver.switchTo().window(yopmailHandle).close();
         }
         driver.switchTo().window(appWindow);
+    }
+
+    public String generateRandomYopMail() {
+        String randomPart = UUID.randomUUID().toString().replace("-", "");
+        randomPart = randomPart.substring(0, 10);
+        return randomPart + "@yopmail.com";
     }
 }

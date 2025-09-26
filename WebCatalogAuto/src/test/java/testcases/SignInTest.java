@@ -65,9 +65,29 @@ public class SignInTest extends BaseTest {
         signIn.enterEmail("");
         signIn.clickContinueButton();
 
-        boolean test = signIn.isOTPInputDisplayed();
+        boolean isOTPInputDisplayed = signIn.isOTPInputDisplayed();
 
-        AssertUtils.assertFalse(test,
+        AssertUtils.assertFalse(isOTPInputDisplayed,
+                "OTP input should not be displayed");
+    }
+
+    @Test(dataProvider = "testData", dataProviderClass = TestDataProvider.class)
+    @TestDataFile(file = "${loginDataFile}", sheet = "SignIn")
+    public void testSignInWithInvalidFormatEmail(String email) {
+        // Step 1: Go to sign-in
+        home.clickBtnLSignIn();
+        signUp.clickSignInLink();
+        signIn.clickContinueWithEmail();
+
+        signIn.enterEmail(email);
+        signIn.clickContinueButton();
+
+        signIn.enterEmail("");
+        signIn.clickContinueButton();
+
+        boolean isOTPInputDisplayed = signIn.isOTPInputDisplayed();
+
+        AssertUtils.assertFalse(isOTPInputDisplayed,
                 "OTP input should not be displayed");
     }
 }
