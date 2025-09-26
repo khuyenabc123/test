@@ -8,7 +8,7 @@ import utils.readers.ConfigReader;
 
 import java.lang.reflect.Method;
 
-public class BaseSetup {
+public class BaseTest {
 
     static String browser = ConfigReader.getProperty("browser");
     static String appURL = ConfigReader.getProperty("url");

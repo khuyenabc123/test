@@ -1,8 +1,7 @@
 package testcases;
 
-import base.BaseSetup;
+import base.BaseTest;
 import listeners.TestListener;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -12,7 +11,7 @@ import utils.TestDataFile;
 import utils.TestDataProvider;
 
 @Listeners(TestListener.class)
-public class SignInTest extends BaseSetup {
+public class SignInTest extends BaseTest {
     private HomePage home;
     private SignUpPage signUp;
     private SignInPage signIn;
