@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import pages.*;
+import utils.AssertUtils;
 import utils.TestDataFile;
 import utils.TestDataProvider;
 
@@ -52,7 +53,7 @@ public class SignInTest extends BaseSetup {
         signIn.enterOtp(otp);
         signIn.clickSignInButton();
 
-        Assert.assertTrue(home.isAvatarMenuDisplayed(),
+        AssertUtils.assertTrue(home.isAvatarMenuDisplayed(),
                 "User should land on dashboard after login");
     }
 
@@ -67,7 +68,7 @@ public class SignInTest extends BaseSetup {
 
         boolean test = signIn.isOTPInputDisplayed();
 
-        Assert.assertFalse(test,
+        AssertUtils.assertFalse(test,
                 "OTP input should not be displayed");
     }
 }

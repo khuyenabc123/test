@@ -69,8 +69,6 @@ public class YopmailPage extends BasePage {
             openInbox(email);
         }
 
-
-
         if (otp == null) {
             throw new RuntimeException("Timeout waiting for OTP for: " + email);
         }
